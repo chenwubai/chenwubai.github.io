@@ -1,0 +1,869 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.lug.ustc.edu.cn/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="D3.js,svg,数据可视化," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/touxiang.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;&amp;emsp;基本图表一共有六种，分别是柱状图、折线图、散点图、气泡图、饼图和雷达图。前面五种图形都已经介绍过如何实现了，今天我们一起来看看最后的雷达图。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于D3.js的雷达图的实现">
+<meta property="og:url" content="http://yoursite.com/2015/11/24/d3-basicCharts-radar/index.html">
+<meta property="og:site_name" content="陈五百">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;基本图表一共有六种，分别是柱状图、折线图、散点图、气泡图、饼图和雷达图。前面五种图形都已经介绍过如何实现了，今天我们一起来看看最后的雷达图。">
+<meta property="og:image" content="http://yoursite.com/uploads/d3-basicCharts-radar/radarAnalysis.png">
+<meta property="og:image" content="http://yoursite.com/uploads/d3-basicCharts-radar/web.png">
+<meta property="og:image" content="http://yoursite.com/uploads/d3-basicCharts-radar/webWithLine.png">
+<meta property="og:image" content="http://yoursite.com/uploads/d3-basicCharts-radar/radar.png">
+<meta property="og:image" content="http://yoursite.com/uploads/d3-basicCharts-radar/radarWithText.png">
+<meta property="og:updated_time" content="2016-04-21T13:13:19.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于D3.js的雷达图的实现">
+<meta name="twitter:description" content="&amp;emsp;&amp;emsp;基本图表一共有六种，分别是柱状图、折线图、散点图、气泡图、饼图和雷达图。前面五种图形都已经介绍过如何实现了，今天我们一起来看看最后的雷达图。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide',
+    motion: true
+  };
+</script>
+
+  <title> 基于D3.js的雷达图的实现 | 陈五百 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Never go die</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Never go die</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                基于D3.js的雷达图的实现
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-11-24T15:28:00+08:00" content="2015-11-24">
+              2015-11-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/chenwubai/" itemprop="url" rel="index">
+                    <span itemprop="name">chenwubai</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>&emsp;&emsp;基本图表一共有六种，分别是柱状图、折线图、散点图、气泡图、饼图和雷达图。前面五种图形都已经介绍过如何实现了，今天我们一起来看看最后的雷达图。<br><a id="more"></a><br>&emsp;&emsp;依然是先把简单的画图框架搭起来，添加SVG画布。这里和饼图有点类似，为了方便后面的绘制，我们把组合这些元素的g元素移动到画布的中心：  </p>
+<pre><code><span class="doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">head</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">title</span>&gt;</span>雷达图<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">style</span>&gt;</span><span class="css">
+            <span class="class">.container</span> <span class="rules">{
+                <span class="rule"><span class="attribute">margin</span>:<span class="value"> <span class="number">30px</span> auto</span></span>;
+                <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">600px</span></span></span>;
+                <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">300px</span></span></span>;
+                <span class="rule"><span class="attribute">border</span>:<span class="value"> <span class="number">1px</span> solid <span class="hexcolor">#000</span></span></span>;
+            }</span>
+
+        </span><span class="tag">&lt;/<span class="title">style</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">body</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"container"</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">svg</span> <span class="attribute">width</span>=<span class="value">"100%"</span> <span class="attribute">height</span>=<span class="value">"100%"</span>&gt;</span><span class="tag">&lt;/<span class="title">svg</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"http://d3js.org/d3.v3.min.js"</span> <span class="attribute">charset</span>=<span class="value">"utf-8"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript">
+            <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>{
+                <span class="keyword">var</span> width = <span class="number">600</span>, height = <span class="number">300</span>;
+                <span class="comment">// 创建一个分组用来组合要画的图表元素</span>
+                <span class="keyword">var</span> main = d3.select(<span class="string">'.container svg'</span>).append(<span class="string">'g'</span>)
+                        .classed(<span class="string">'main'</span>, <span class="literal">true</span>)
+                        .attr(<span class="string">'transform'</span>, <span class="string">"translate("</span> + width/<span class="number">2</span> + <span class="string">','</span> + height/<span class="number">2</span> + <span class="string">')'</span>);
+
+            };
+            <span class="function"><span class="keyword">function</span> <span class="title">getColor</span>(<span class="params">idx</span>) </span>{
+                <span class="keyword">var</span> palette = [
+                    <span class="string">'#2ec7c9'</span>, <span class="string">'#b6a2de'</span>, <span class="string">'#5ab1ef'</span>, <span class="string">'#ffb980'</span>, <span class="string">'#d87a80'</span>,
+                    <span class="string">'#8d98b3'</span>, <span class="string">'#e5cf0d'</span>, <span class="string">'#97b552'</span>, <span class="string">'#95706d'</span>, <span class="string">'#dc69aa'</span>,
+                    <span class="string">'#07a2a4'</span>, <span class="string">'#9a7fd1'</span>, <span class="string">'#588dd5'</span>, <span class="string">'#f5994e'</span>, <span class="string">'#c05050'</span>,
+                    <span class="string">'#59678c'</span>, <span class="string">'#c9ab00'</span>, <span class="string">'#7eb00a'</span>, <span class="string">'#6f5553'</span>, <span class="string">'#c14089'</span>
+                ]
+                <span class="keyword">return</span> palette[idx % palette.length];
+            }
+        </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span>
+</code></pre><p>&emsp;&emsp;这里为什么我会说雷达图和饼图会有点类似呢？看一下下面这张图。<br><img src="/uploads/d3-basicCharts-radar/radarAnalysis.png" width="400" height="289"><br>&emsp;&emsp;可以看到，雷达图的网轴（蓝色部分）是由多个正多边形所组成的，而正多边形的绘制正好是可以利用圆半径的特性来绘制的，所以从一开始把绘制的原点移动到画布的中心是很方便后面的绘制工作的。  </p>
+<h2 id="模拟数据">模拟数据</h2><p>&emsp;&emsp;我们先模拟一些原始数据。  </p>
+<pre><code><span class="atom">var</span> <span class="atom">data</span> = {
+    <span class="atom">fieldNames</span>: [<span class="string">'语文'</span>,<span class="string">'数学'</span>,<span class="string">'外语'</span>,<span class="string">'物理'</span>,<span class="string">'化学'</span>,<span class="string">'生物'</span>,<span class="string">'政治'</span>,<span class="string">'历史'</span>],
+    <span class="atom">values</span>: [
+        [<span class="number">10</span>,<span class="number">20</span>,<span class="number">30</span>,<span class="number">40</span>,<span class="number">50</span>,<span class="number">60</span>,<span class="number">70</span>,<span class="number">80</span>]
+    ]
+};
+</code></pre><h2 id="计算网轴坐标并绘制">计算网轴坐标并绘制</h2><p>&emsp;&emsp;在前面的其他图表的实现中，都有比例尺或者布局这样的东西来为我们转化数据提供便利，雷达图是否也存在这样的工具函数呢？答案是没有！没有！没有！重要的事情说三遍！(-_-) 所以，我们只能开动自己的小脑瓜自己算了。  </p>
+<pre><code><span class="comment">// 设定一些方便计算的常量</span>
+<span class="keyword">var</span> radius = <span class="number">100</span>,
+    <span class="comment">// 指标的个数，即fieldNames的长度</span>
+    total = <span class="number">8</span>,
+    <span class="comment">// 需要将网轴分成几级，即网轴上从小到大有多少个正多边形</span>
+    level = <span class="number">4</span>,
+    <span class="comment">// 网轴的范围，类似坐标轴</span>
+    rangeMin = <span class="number">0</span>,
+    rangeMax = <span class="number">100</span>,
+    arc = <span class="number">2</span> * <span class="built_in">Math</span>.PI;
+<span class="comment">// 每项指标所在的角度</span>
+<span class="keyword">var</span> onePiece = arc/total;
+<span class="comment">// 计算网轴的正多边形的坐标</span>
+<span class="keyword">var</span> polygons = {
+    webs: [],
+    webPoints: []
+};
+<span class="keyword">for</span>(<span class="keyword">var</span> k=level;k&gt;<span class="number">0</span>;k--) {
+    <span class="keyword">var</span> webs = <span class="string">''</span>,
+            webPoints = [];
+    <span class="keyword">var</span> r = radius/level * k;
+    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;total;i++) {
+        <span class="keyword">var</span> x = r * <span class="built_in">Math</span>.sin(i * onePiece),
+            y = r * <span class="built_in">Math</span>.cos(i * onePiece);
+        webs += x + <span class="string">','</span> + y + <span class="string">' '</span>;
+        webPoints.push({
+            x: x,
+            y: y
+        });
+    }
+    polygons.webs.push(webs);
+    polygons.webPoints.push(webPoints);
+}  
+</code></pre><p>&emsp;&emsp;计算网轴的坐标就是计算一个个多边形的各点坐标，为了后面添加polygon元素时方便绘制（points属性的赋值），我们需要在求点坐标的时候顺便把它们拼成字符串。上述代码的for循环中，外层循环代表一个多边形，内层循环代表多边形上的点，多边形与多边形之间差异仅仅在于它们的外圆的半径不同，而同一多边形的点与点之间的差异在于它们的角度不同。点的坐标由半径乘以角度的正弦或者余弦来求得。<br>&emsp;&emsp;得到了计算好的坐标以后，我们就开始添加网轴。  </p>
+<pre><code><span class="comment">// 绘制网轴</span>
+<span class="keyword">var</span> webs = main.append(<span class="string">'g'</span>)
+        .classed(<span class="string">'webs'</span>, <span class="literal">true</span>);
+webs.selectAll(<span class="string">'polygon'</span>)
+        .data(polygons.webs)
+        .enter()
+        .append(<span class="string">'polygon'</span>)
+        .attr(<span class="string">'points'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> </span>{
+            <span class="keyword">return</span> d;
+        });
+</code></pre><p>&emsp;&emsp;添加一个g元素用来组合所有代表网轴的元素，选择其中的polygon元素并绑定polygons.webs数组，enter()搭配append()添加新的polygon元素，对points属性进行复制。完成这一系列在前面几篇文章中已经反复练习的操作以后，为了让网轴更加的明显，我们给它加一点样式。  </p>
+<pre><code><span class="class">.webs</span> <span class="tag">polygon</span> <span class="rules">{
+    <span class="rule"><span class="attribute">fill</span>:<span class="value"> white</span></span>;
+    <span class="rule"><span class="attribute">fill-opacity</span>:<span class="value"> <span class="number">0.5</span></span></span>;
+    <span class="rule"><span class="attribute">stroke</span>:<span class="value"> gray</span></span>;
+    <span class="rule"><span class="attribute">stroke-dasharray</span>:<span class="value"> <span class="number">10</span> <span class="number">5</span></span></span>;
+}</span>  
+</code></pre><p>&emsp;&emsp;我们得到了如下图所示的网轴。<br><img src="/uploads/d3-basicCharts-radar/web.png" width="320" height="160">   </p>
+<h2 id="添加纵轴">添加纵轴</h2><p>&emsp;&emsp;接着我们把纵轴也添加上。纵轴就是添加一根根的线条，连接中心点和最外层的多边形上的点，需要的数据可以从polygons.webPoints[0]中取。  </p>
+<pre><code><span class="comment">// 添加纵轴</span>
+<span class="keyword">var</span> lines = main.append(<span class="string">'g'</span>)
+        .classed(<span class="string">'lines'</span>, <span class="literal">true</span>);
+lines.selectAll(<span class="string">'line'</span>)
+        .data(polygons.webPoints[<span class="number">0</span>])
+        .enter()
+        .append(<span class="string">'line'</span>)
+        .attr(<span class="string">'x1'</span>, <span class="number">0</span>)
+        .attr(<span class="string">'y1'</span>, <span class="number">0</span>)
+        .attr(<span class="string">'x2'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> </span>{
+            <span class="keyword">return</span> d.x;
+        })
+        .attr(<span class="string">'y2'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> </span>{
+            <span class="keyword">return</span> d.y;
+        });
+</code></pre><p>&emsp;&emsp;雷达图的坐标轴部分就完成了。<br><img src="/uploads/d3-basicCharts-radar/webWithLine.png" width="320" height="160">  </p>
+<h2 id="计算雷达图区域并添加">计算雷达图区域并添加</h2><p>&emsp;&emsp;雷达图区域也是一个多边形，只不过是一个不规则的多边形。但是他的几个点始终处在纵轴上，并且点在纵轴上的位置可以通过点所代表的值在纵轴范围内的占比计算出来的。  </p>
+<pre><code><span class="comment">// 计算雷达图表的坐标</span>
+<span class="keyword">var</span> areasData = [];
+<span class="keyword">var</span> values = data.values;
+<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;values.length;i++) {
+    <span class="keyword">var</span> <span class="keyword">value</span> = values[i],
+            area = <span class="string">''</span>,
+            points = [];
+    <span class="keyword">for</span>(<span class="keyword">var</span> k=<span class="number">0</span>;k&lt;total;k++) {
+        <span class="keyword">var</span> r = radius * (<span class="keyword">value</span>[k] - rangeMin)/(rangeMax - rangeMin);
+        <span class="keyword">var</span> x = r * Math.sin(k * onePiece),
+            y = r * Math.cos(k * onePiece);
+        area += x + <span class="string">','</span> + y + <span class="string">' '</span>;
+        points.push({
+            x: x,
+            y: y
+        })
+    }
+    areasData.push({
+        polygon: area,
+        points: points
+    });
+}
+</code></pre><p>&emsp;&emsp;计算完点的坐标以后我们就可以添加雷达图区域了。为了使雷达图更可观，我们除了添加多边形表示雷达图的区域以外，也把多边形在各纵轴上的点标记出来。  </p>
+<pre><code><span class="comment">// 添加g分组包含所有雷达图区域</span>
+<span class="keyword">var</span> areas = main.append(<span class="string">'g'</span>)
+    .classed(<span class="string">'areas'</span>, <span class="literal">true</span>);
+<span class="comment">// 添加g分组用来包含一个雷达图区域下的多边形以及圆点 </span>
+areas.selectAll(<span class="string">'g'</span>)
+    .data(areasData)
+    .enter()
+    .append(<span class="string">'g'</span>)
+    .attr(<span class="string">'class'</span>,<span class="function"><span class="keyword">function</span><span class="params">(d, i)</span> </span>{
+        <span class="keyword">return</span> <span class="string">'area'</span> + (i+<span class="number">1</span>);
+    });
+<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;areasData.length;i++) {
+    <span class="comment">// 依次循环每个雷达图区域</span>
+    <span class="keyword">var</span> area = areas.select(<span class="string">'.area'</span> + (i+<span class="number">1</span>)),
+            areaData = areasData[i];
+    <span class="comment">// 绘制雷达图区域下的多边形</span>
+    area.append(<span class="string">'polygon'</span>)
+            .attr(<span class="string">'points'</span>, areaData.polygon)
+            .attr(<span class="string">'stroke'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d, index)</span> </span>{
+                <span class="keyword">return</span> getColor(i);
+            })
+            .attr(<span class="string">'fill'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d, index)</span> </span>{
+                <span class="keyword">return</span> getColor(i);
+            });
+    <span class="comment">// 绘制雷达图区域下的点    </span>
+    <span class="keyword">var</span> circles = area.append(<span class="string">'g'</span>)
+            .classed(<span class="string">'circles'</span>, <span class="literal">true</span>);
+    circles.selectAll(<span class="string">'circle'</span>)
+            .data(areaData.points)
+            .enter()
+            .append(<span class="string">'circle'</span>)
+            .attr(<span class="string">'cx'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> </span>{
+                <span class="keyword">return</span> d.x;
+            })
+            .attr(<span class="string">'cy'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> </span>{
+                <span class="keyword">return</span> d.y;
+            })
+            .attr(<span class="string">'r'</span>, <span class="number">3</span>)
+            .attr(<span class="string">'stroke'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d, index)</span> </span>{
+                <span class="keyword">return</span> getColor(i);
+            });  
+}
+</code></pre><p>&emsp;&emsp;这里为了体验层次关系，我用areas包含住所有雷达图区域，又在里面用一个g分组表示一个雷达图区域，在雷达图区域里包含组成该区域的多边形和圆点。这里因为我们数据用一个雷达图区域就表示了，所以这个for循环只会循环一次。给绘制好的区域加上样式。  </p>
+<pre><code><span class="class">.areas</span> <span class="tag">polygon</span> <span class="rules">{
+    <span class="rule"><span class="attribute">fill-opacity</span>:<span class="value"> <span class="number">0.5</span></span></span>;
+    <span class="rule"><span class="attribute">stroke-width</span>:<span class="value"> <span class="number">3</span></span></span>;
+}</span>
+<span class="class">.areas</span> <span class="tag">circle</span> <span class="rules">{
+    <span class="rule"><span class="attribute">fill</span>:<span class="value"> white</span></span>;
+    <span class="rule"><span class="attribute">stroke-width</span>:<span class="value"> <span class="number">3</span></span></span>;
+}</span>
+</code></pre><p>&emsp;&emsp;于是得到了下图这个样子的图表。<br><img src="/uploads/d3-basicCharts-radar/radar.png" width="320" height="160">   </p>
+<h2 id="计算文字标签坐标并添加">计算文字标签坐标并添加</h2><p>&emsp;&emsp;为了让上面的图表更完整一些，我们给它加上文字标签。文字标签标注在网轴的外围，所以可以以计算网轴多边形点坐标的同样的原理计算文字标签的坐标。  </p>
+<pre><code><span class="comment">// 计算文字标签坐标</span>
+<span class="keyword">var</span> textPoints = [];
+<span class="keyword">var</span> textRadius = radius + 20;
+<span class="keyword">for</span>(<span class="keyword">var</span> i=0;i&lt;<span class="keyword">total</span>;i++) {
+    <span class="keyword">var</span> x = textRadius * Math.<span class="literal">sin</span>(i * onePiece),
+            y = textRadius * Math.<span class="literal">cos</span>(i * onePiece);
+    textPoints.push({
+        x: x,
+        y: <span class="literal">y</span>
+    });
+}  
+</code></pre><p>计算好坐标以后再添加到画布中。  </p>
+<pre><code><span class="comment">// 绘制文字标签</span>
+<span class="keyword">var</span> texts = main.append(<span class="string">'g'</span>)
+        .classed(<span class="string">'texts'</span>, <span class="literal">true</span>);
+texts.selectAll(<span class="string">'text'</span>)
+        .data(textPoints)
+        .enter()
+        .append(<span class="string">'text'</span>)
+        .attr(<span class="string">'x'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> </span>{
+            <span class="keyword">return</span> d.x;
+        })
+        .attr(<span class="string">'y'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> </span>{
+            <span class="keyword">return</span> d.y;
+        })
+        .text(<span class="function"><span class="keyword">function</span><span class="params">(d,i)</span> </span>{
+            <span class="keyword">return</span> data.fieldNames[i];
+        });  
+</code></pre><p>&emsp;&emsp;最后的样子是这样的。<br><img src="/uploads/d3-basicCharts-radar/radarWithText.png" width="320" height="160"><br>&emsp;&emsp;完整的代码及展示可参见<a href="/uploads/d3-basicCharts-radar/radar.html">radar.html</a>。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/D3-js/" rel="tag">#D3.js</a>
+          
+            <a href="/tags/svg/" rel="tag">#svg</a>
+          
+            <a href="/tags/数据可视化/" rel="tag">#数据可视化</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/24/d3-basicCharts-pie/" rel="next" title="基于D3.js的饼图的实现">
+                <i class="fa fa-chevron-left"></i> 基于D3.js的饼图的实现
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/20/vividCharts/" rel="prev" title="鲜活的图表">
+                鲜活的图表 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/touxiang.jpg" alt="陈五百" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">陈五百</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">我不怕千万人阻挡，只怕自己投降。</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#模拟数据"><span class="nav-number">1.</span> <span class="nav-text">模拟数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算网轴坐标并绘制"><span class="nav-number">2.</span> <span class="nav-text">计算网轴坐标并绘制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加纵轴"><span class="nav-number">3.</span> <span class="nav-text">添加纵轴</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算雷达图区域并添加"><span class="nav-number">4.</span> <span class="nav-text">计算雷达图区域并添加</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算文字标签坐标并添加"><span class="nav-number">5.</span> <span class="nav-text">计算文字标签坐标并添加</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈五百</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

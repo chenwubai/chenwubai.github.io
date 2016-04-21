@@ -53,16 +53,46 @@
 
 
 
-<meta name="description" content="我不怕千万人阻挡，只怕自己投降。">
+<meta name="description" content="&amp;lt;!DOCTYPE html&amp;gt;
+
+    
+        
+        气泡图
+        
+            .container {
+                margin: 30px auto;
+                width: 600px;
+                height: 300px;
+                border: 1px">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://yoursite.com/tags/index.html">
+<meta property="og:title" content="陈五百">
+<meta property="og:url" content="http://yoursite.com/uploads/d3-basicCharts-scatter&bubble/bubble.html">
 <meta property="og:site_name" content="陈五百">
-<meta property="og:description" content="我不怕千万人阻挡，只怕自己投降。">
-<meta property="og:updated_time" content="2015-10-20T08:18:41.000Z">
+<meta property="og:description" content="&amp;lt;!DOCTYPE html&amp;gt;
+
+    
+        
+        气泡图
+        
+            .container {
+                margin: 30px auto;
+                width: 600px;
+                height: 300px;
+                border: 1px">
+<meta property="og:updated_time" content="2016-04-15T07:24:05.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="tags">
-<meta name="twitter:description" content="我不怕千万人阻挡，只怕自己投降。">
+<meta name="twitter:title" content="陈五百">
+<meta name="twitter:description" content="&amp;lt;!DOCTYPE html&amp;gt;
+
+    
+        
+        气泡图
+        
+            .container {
+                margin: 30px auto;
+                width: 600px;
+                height: 300px;
+                border: 1px">
 
 
 
@@ -78,7 +108,7 @@
   
 
   
-    标签 | 陈五百
+     | 陈五百
   
 </title>
 </head>
@@ -182,14 +212,91 @@
   <div id="posts" class="posts-expand">
     
     
-      <div class="tag-cloud">
-        <div class="tag-cloud-title">
-            目前共计 4 个标签
+      <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>气泡图</title>
+        <style>
+            .container {
+                margin: 30px auto;
+                width: 600px;
+                height: 300px;
+                border: 1px solid #000;
+            }
+            .axis path,
+            .axis line {
+                stroke: #000;
+                fill: none;
+            }
+            .bubble {
+                fill: #2ec7c9;
+                fill-opacity: 0.5;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <svg width="100%" height="100%"/>
         </div>
-        <div class="tag-cloud-tags">
-          <a href="/tags/D3-js/" style="font-size: 21px; color: #6f6f6f">D3.js</a> <a href="/tags/Life/" style="font-size: 12px; color: #ccc">Life</a> <a href="/tags/svg/" style="font-size: 21px; color: #6f6f6f">svg</a> <a href="/tags/数据可视化/" style="font-size: 30px; color: #111">数据可视化</a>
-        </div>
-      </div>
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        <script>
+            window.onload = function() {
+                var width = 600, height = 300;
+                // SVG画布边缘与图表内容的距离
+                var padding = { top: 50, right: 50, bottom: 50, left: 50 };
+                // 创建一个分组用来组合要画的图表元素
+                var main = d3.select('.container svg').append('g')
+                        .classed('main', true)
+                        .attr('transform', "translate(" + padding.top + ',' + padding.left + ')');
+                // 模拟数据
+                var dataset = [
+                    { x: 69, y: 45, weight: 5 },{ x: 30, y: 37, weight: 10 },
+                    { x: 43, y: 10, weight: 23 },{ x: 54, y: 48, weight: 41 },
+                    { x: 18, y: 18, weight: 41 },{ x: 88, y: 21, weight: 32 },
+                    { x: 45, y: 48, weight: 12 },{ x: 14, y: 32, weight: 9 },
+                    { x: 78, y: 18, weight: 16 },{ x: 13, y: 45, weight: 32 }
+                ];
+                // 添加x轴和y轴
+                var xScale = d3.scale.linear()
+                        .domain([0, 100])
+                        .range([0, width - padding.left - padding.right]);
+                var yScale = d3.scale.linear()
+                        .domain([0, 50])
+                        .range([height - padding.top - padding.bottom, 0]);
+                var xAxis = d3.svg.axis()
+                        .scale(xScale)
+                        .orient('bottom');
+                var yAxis = d3.svg.axis()
+                        .scale(yScale)
+                        .orient('left');
+
+                main.append('g')
+                        .attr('class', 'axis')
+                        .attr('transform', 'translate(0,' + (height - padding.top - padding.bottom) + ')')
+                        .call(xAxis);
+                main.append('g')
+                        .attr('class', 'axis')
+                        .call(yAxis);
+                // 添加气泡
+                main.selectAll('.bubble')
+                        .data(dataset)
+                        .enter()
+                        .append('circle')
+                        .attr('class', 'bubble')
+                        .attr('cx', function(d) {
+                            return xScale(d.x);
+                        })
+                        .attr('cy', function(d) {
+                            return yScale(d.y);
+                        })
+                        .attr('r', function(d) {
+                            return d.weight;
+                        });
+            };
+        </script>
+    </body>
+</html>
     
   </div>
 

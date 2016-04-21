@@ -1,0 +1,591 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.lug.ustc.edu.cn/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/touxiang.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="&amp;lt;!DOCTYPE html&amp;gt;
+
+    
+        
+        雷达图
+        
+            .container {
+                margin: 30px auto;
+                width: 600px;
+                height: 300px;
+                border: 1px">
+<meta property="og:type" content="website">
+<meta property="og:title" content="陈五百">
+<meta property="og:url" content="http://yoursite.com/uploads/d3-basicCharts-radar/radar.html">
+<meta property="og:site_name" content="陈五百">
+<meta property="og:description" content="&amp;lt;!DOCTYPE html&amp;gt;
+
+    
+        
+        雷达图
+        
+            .container {
+                margin: 30px auto;
+                width: 600px;
+                height: 300px;
+                border: 1px">
+<meta property="og:updated_time" content="2016-04-15T07:24:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="陈五百">
+<meta name="twitter:description" content="&amp;lt;!DOCTYPE html&amp;gt;
+
+    
+        
+        雷达图
+        
+            .container {
+                margin: 30px auto;
+                width: 600px;
+                height: 300px;
+                border: 1px">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide',
+    motion: true
+  };
+</script>
+
+  <title>
+  
+
+  
+     | 陈五百
+  
+</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Never go die</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Never go die</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+    
+      <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>雷达图</title>
+        <style>
+            .container {
+                margin: 30px auto;
+                width: 600px;
+                height: 300px;
+                border: 1px solid #000;
+            }
+            .webs polygon,
+            .lines line {
+                fill: white;
+                fill-opacity: 0.5;
+                stroke: gray;
+                stroke-dasharray: 10 5;
+            }
+            .webs polygon:nth-child(odd) {
+                fill: lightgray;
+            }
+            .areas polygon {
+                fill-opacity: 0.5;
+                stroke-width: 3;
+            }
+            .areas circle {
+                fill: white;
+                stroke-width: 3;
+            }
+            .texts text {
+                text-anchor: middle;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <svg width="100%" height="100%"/>
+        </div>
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        <script>
+            window.onload = function() {
+                var width = 600, height = 300;
+                // 创建一个分组用来组合要画的图表元素
+                var main = d3.select('.container svg').append('g')
+                        .classed('main', true)
+                        .attr('transform', "translate(" + width/2 + ',' + height/2 + ')');
+                // 模拟数据
+                var data = {
+                    fieldNames: ['语文','数学','外语','物理','化学','生物','政治','历史'],
+                    values: [
+                        [10,20,30,40,50,60,70,80]
+                    ]
+                };
+                // 设定一些方便计算的常量
+                var radius = 100,
+                // 指标的个数，即fieldNames的长度
+                        total = 8,
+                // 需要将网轴分成几级，即网轴上从小到大有多少个正多边形
+                        level = 4,
+                // 网轴的范围，类似坐标轴
+                        rangeMin = 0,
+                        rangeMax = 100,
+                        arc = 2 * Math.PI;
+                // 每项指标所在的角度
+                var onePiece = arc/total;
+                // 计算网轴的正多边形的坐标
+                var polygons = {
+                    webs: [],
+                    webPoints: []
+                };
+                for(var k=level;k>0;k--) {
+                    var webs = '',
+                            webPoints = [];
+                    var r = radius/level * k;
+                    for(var i=0;i<total;i++) {
+                        var x = r * Math.sin(i * onePiece),
+                                y = r * Math.cos(i * onePiece);
+                        webs += x + ',' + y + ' ';
+                        webPoints.push({
+                            x: x,
+                            y: y
+                        });
+                    }
+                    polygons.webs.push(webs);
+                    polygons.webPoints.push(webPoints);
+                }
+                // 绘制网轴
+                var webs = main.append('g')
+                        .classed('webs', true);
+                webs.selectAll('polygon')
+                        .data(polygons.webs)
+                        .enter()
+                        .append('polygon')
+                        .attr('points', function(d) {
+                            return d;
+                        });
+                // 添加纵轴
+                var lines = main.append('g')
+                        .classed('lines', true);
+                lines.selectAll('line')
+                        .data(polygons.webPoints[0])
+                        .enter()
+                        .append('line')
+                        .attr('x1', 0)
+                        .attr('y1', 0)
+                        .attr('x2', function(d) {
+                            return d.x;
+                        })
+                        .attr('y2', function(d) {
+                            return d.y;
+                        });
+                // 计算雷达图表的坐标
+                var areasData = [];
+                var values = data.values;
+                for(var i=0;i<values.length;i++) {
+                    var value = values[i],
+                            area = '',
+                            points = [];
+                    for(var k=0;k<total;k++) {
+                        var r = radius * (value[k] - rangeMin)/(rangeMax - rangeMin);
+                        var x = r * Math.sin(k * onePiece),
+                                y = r * Math.cos(k * onePiece);
+                        area += x + ',' + y + ' ';
+                        points.push({
+                            x: x,
+                            y: y
+                        })
+                    }
+                    areasData.push({
+                        polygon: area,
+                        points: points
+                    });
+                }
+                // 添加g分组包含所有雷达图区域
+                var areas = main.append('g')
+                        .classed('areas', true);
+                // 添加g分组用来包含一个雷达图区域下的多边形以及圆点
+                areas.selectAll('g')
+                        .data(areasData)
+                        .enter()
+                        .append('g')
+                        .attr('class',function(d, i) {
+                            return 'area' + (i+1);
+                        });
+                for(var i=0;i<areasData.length;i++) {
+                    // 依次循环每个雷达图区域
+                    var area = areas.select('.area' + (i+1)),
+                            areaData = areasData[i];
+                    // 绘制雷达图区域下的多边形
+                    area.append('polygon')
+                            .attr('points', areaData.polygon)
+                            .attr('stroke', function(d, index) {
+                                return getColor(i);
+                            })
+                            .attr('fill', function(d, index) {
+                                return getColor(i);
+                            });
+                    // 绘制雷达图区域下的点
+                    var circles = area.append('g')
+                            .classed('circles', true);
+                    circles.selectAll('circle')
+                            .data(areaData.points)
+                            .enter()
+                            .append('circle')
+                            .attr('cx', function(d) {
+                                return d.x;
+                            })
+                            .attr('cy', function(d) {
+                                return d.y;
+                            })
+                            .attr('r', 3)
+                            .attr('stroke', function(d, index) {
+                                return getColor(i);
+                            });
+                }
+                // 计算文字标签坐标
+                var textPoints = [];
+                var textRadius = radius + 20;
+                for(var i=0;i<total;i++) {
+                    var x = textRadius * Math.sin(i * onePiece),
+                            y = textRadius * Math.cos(i * onePiece);
+                    textPoints.push({
+                        x: x,
+                        y: y
+                    });
+                }
+                // 绘制文字标签
+                var texts = main.append('g')
+                        .classed('texts', true);
+                texts.selectAll('text')
+                        .data(textPoints)
+                        .enter()
+                        .append('text')
+                        .attr('x', function(d) {
+                            return d.x;
+                        })
+                        .attr('y', function(d) {
+                            return d.y;
+                        })
+                        .text(function(d,i) {
+                            return data.fieldNames[i];
+                        });
+            };
+            function getColor(idx) {
+                var palette = [
+                    '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
+                    '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
+                    '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
+                    '#59678c', '#c9ab00', '#7eb00a', '#6f5553', '#c14089'
+                ]
+                return palette[idx % palette.length];
+            }
+        </script>
+    </body>
+</html>
+    
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/touxiang.jpg" alt="陈五百" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">陈五百</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">我不怕千万人阻挡，只怕自己投降。</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈五百</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

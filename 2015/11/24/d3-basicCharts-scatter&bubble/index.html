@@ -1,0 +1,816 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.lug.ustc.edu.cn/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="D3.js,svg,数据可视化," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/touxiang.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;&amp;emsp;在之前的《基于D3.js的柱状图的实现》和《基于D3.js的折线图的实现》中，已经介绍过柱状图和折线图了。今天来说说非常相似的两种图表——散点图和气泡图。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于D3.js的散点图和气泡图的实现">
+<meta property="og:url" content="http://yoursite.com/2015/11/24/d3-basicCharts-scatter&bubble/index.html">
+<meta property="og:site_name" content="陈五百">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;在之前的《基于D3.js的柱状图的实现》和《基于D3.js的折线图的实现》中，已经介绍过柱状图和折线图了。今天来说说非常相似的两种图表——散点图和气泡图。">
+<meta property="og:image" content="http://yoursite.com/uploads/d3-basicCharts-scatter&bubble/axis-scatter.png">
+<meta property="og:image" content="http://yoursite.com/uploads/d3-basicCharts-scatter&bubble/scatter.png">
+<meta property="og:image" content="http://yoursite.com/uploads/d3-basicCharts-scatter&bubble/bubble.png">
+<meta property="og:updated_time" content="2016-04-21T13:14:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于D3.js的散点图和气泡图的实现">
+<meta name="twitter:description" content="&amp;emsp;&amp;emsp;在之前的《基于D3.js的柱状图的实现》和《基于D3.js的折线图的实现》中，已经介绍过柱状图和折线图了。今天来说说非常相似的两种图表——散点图和气泡图。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide',
+    motion: true
+  };
+</script>
+
+  <title> 基于D3.js的散点图和气泡图的实现 | 陈五百 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Never go die</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Never go die</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                基于D3.js的散点图和气泡图的实现
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-11-24T00:00:00+08:00" content="2015-11-24">
+              2015-11-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/chenwubai/" itemprop="url" rel="index">
+                    <span itemprop="name">chenwubai</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>&emsp;&emsp;在之前的<a href="/2015/11/23/d3-basicCharts-bar/#more">《基于D3.js的柱状图的实现》</a>和<a href="/2015/11/23/d3-basicCharts-line/#more">《基于D3.js的折线图的实现》</a>中，已经介绍过柱状图和折线图了。今天来说说非常相似的两种图表——散点图和气泡图。<br><a id="more"></a><br>&emsp;&emsp;还是和之前一样，我们先把简单的画图框架搭起来，添加SVG画布：  </p>
+<pre><code><span class="doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">head</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">title</span>&gt;</span>散点图和气泡图<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">style</span>&gt;</span><span class="css">
+            <span class="class">.container</span> <span class="rules">{
+                <span class="rule"><span class="attribute">margin</span>:<span class="value"> <span class="number">30px</span> auto</span></span>;
+                <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">600px</span></span></span>;
+                <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">300px</span></span></span>;
+                <span class="rule"><span class="attribute">border</span>:<span class="value"> <span class="number">1px</span> solid <span class="hexcolor">#000</span></span></span>;
+            }</span>
+        </span><span class="tag">&lt;/<span class="title">style</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">body</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"container"</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">svg</span> <span class="attribute">width</span>=<span class="value">"100%"</span> <span class="attribute">height</span>=<span class="value">"100%"</span>&gt;</span><span class="tag">&lt;/<span class="title">svg</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"d3/d3.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript">
+            <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>{
+                <span class="keyword">var</span> width = <span class="number">600</span>, height = <span class="number">300</span>;
+                <span class="comment">// SVG画布边缘与图表内容的距离</span>
+                <span class="keyword">var</span> padding = { top: <span class="number">50</span>, right: <span class="number">50</span>, bottom: <span class="number">50</span>, left: <span class="number">50</span> };
+                <span class="comment">// 创建一个分组用来组合要画的图表元素</span>
+                <span class="keyword">var</span> main = d3.select(<span class="string">'.container svg'</span>).append(<span class="string">'g'</span>)
+                    <span class="comment">// 给这个分组加上main类</span>
+                    .classed(<span class="string">'main'</span>)
+                    <span class="comment">// 设置该分组的transform属性</span>
+                    .attr(<span class="string">'transform'</span>, <span class="string">"translate("</span> + padding.top + <span class="string">','</span> + padding.left + <span class="string">')'</span>);
+            };
+        </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span>  
+</code></pre><p>&emsp;&emsp;散点图和气泡图虽然在展现意义上是不同的，但从技术实现的角度来讲，它们还是很类似的，都是由坐标轴和一个个的圆所组成的。</p>
+<h2 id="散点图">散点图</h2><h3 id="坐标轴的实现">坐标轴的实现</h3><p>&emsp;&emsp;为了实现真实的效果，散点图和气泡图我们使用不同的模拟数据。与折线图同理，散点图的各点的坐标的关系在坐标轴上的关系是连续的，所以它的x轴和y轴都使用线性比例尺（线性比例尺和序数比例尺的区别参见<a href="/2015/11/23/d3-basicCharts-bar/#more">《基于D3.js的柱状图的实现》</a>）。</p>
+<pre><code>// 模拟数据
+<span class="atom">var</span> <span class="atom">dataset</span> = [[<span class="number">161.2</span>, <span class="number">51.6</span>], [<span class="number">167.5</span>, <span class="number">59.0</span>], [<span class="number">159.5</span>, <span class="number">49.2</span>], [<span class="number">157.0</span>, <span class="number">63.0</span>], [<span class="number">155.8</span>, <span class="number">53.6</span>],
+            [<span class="number">170.0</span>, <span class="number">59.0</span>], [<span class="number">159.1</span>, <span class="number">47.6</span>], [<span class="number">166.0</span>, <span class="number">69.8</span>], [<span class="number">176.2</span>, <span class="number">66.8</span>], [<span class="number">160.2</span>, <span class="number">75.2</span>],
+            [<span class="number">172.5</span>, <span class="number">55.2</span>], [<span class="number">170.9</span>, <span class="number">54.2</span>], [<span class="number">172.9</span>, <span class="number">62.5</span>], [<span class="number">153.4</span>, <span class="number">42.0</span>], [<span class="number">160.0</span>, <span class="number">50.0</span>],
+            [<span class="number">147.2</span>, <span class="number">49.8</span>], [<span class="number">168.2</span>, <span class="number">49.2</span>], [<span class="number">175.0</span>, <span class="number">73.2</span>], [<span class="number">157.0</span>, <span class="number">47.8</span>], [<span class="number">167.6</span>, <span class="number">68.8</span>],
+            [<span class="number">159.5</span>, <span class="number">50.6</span>], [<span class="number">175.0</span>, <span class="number">82.5</span>], [<span class="number">166.8</span>, <span class="number">57.2</span>], [<span class="number">176.5</span>, <span class="number">87.8</span>], [<span class="number">170.2</span>, <span class="number">72.8</span>],
+            [<span class="number">174.0</span>, <span class="number">54.5</span>], [<span class="number">173.0</span>, <span class="number">59.8</span>], [<span class="number">179.9</span>, <span class="number">67.3</span>], [<span class="number">170.5</span>, <span class="number">67.8</span>], [<span class="number">160.0</span>, <span class="number">47.0</span>],
+            [<span class="number">154.4</span>, <span class="number">46.2</span>], [<span class="number">162.0</span>, <span class="number">55.0</span>], [<span class="number">176.5</span>, <span class="number">83.0</span>], [<span class="number">160.0</span>, <span class="number">54.4</span>], [<span class="number">152.0</span>, <span class="number">45.8</span>],
+            [<span class="number">162.1</span>, <span class="number">53.6</span>], [<span class="number">170.0</span>, <span class="number">73.2</span>], [<span class="number">160.2</span>, <span class="number">52.1</span>], [<span class="number">161.3</span>, <span class="number">67.9</span>], [<span class="number">166.4</span>, <span class="number">56.6</span>],
+            [<span class="number">168.9</span>, <span class="number">62.3</span>], [<span class="number">163.8</span>, <span class="number">58.5</span>], [<span class="number">167.6</span>, <span class="number">54.5</span>], [<span class="number">160.0</span>, <span class="number">50.2</span>], [<span class="number">161.3</span>, <span class="number">60.3</span>],
+            [<span class="number">167.6</span>, <span class="number">58.3</span>], [<span class="number">165.1</span>, <span class="number">56.2</span>], [<span class="number">160.0</span>, <span class="number">50.2</span>], [<span class="number">170.0</span>, <span class="number">72.9</span>], [<span class="number">157.5</span>, <span class="number">59.8</span>],
+            [<span class="number">167.6</span>, <span class="number">61.0</span>], [<span class="number">160.7</span>, <span class="number">69.1</span>], [<span class="number">163.2</span>, <span class="number">55.9</span>], [<span class="number">152.4</span>, <span class="number">46.5</span>], [<span class="number">157.5</span>, <span class="number">54.3</span>],
+            [<span class="number">168.3</span>, <span class="number">54.8</span>], [<span class="number">180.3</span>, <span class="number">60.7</span>], [<span class="number">165.5</span>, <span class="number">60.0</span>], [<span class="number">165.0</span>, <span class="number">62.0</span>], [<span class="number">164.5</span>, <span class="number">60.3</span>],
+            [<span class="number">156.0</span>, <span class="number">52.7</span>], [<span class="number">160.0</span>, <span class="number">74.3</span>], [<span class="number">163.0</span>, <span class="number">62.0</span>], [<span class="number">165.7</span>, <span class="number">73.1</span>], [<span class="number">161.0</span>, <span class="number">80.0</span>],
+            [<span class="number">162.0</span>, <span class="number">54.7</span>], [<span class="number">166.0</span>, <span class="number">53.2</span>], [<span class="number">174.0</span>, <span class="number">75.7</span>], [<span class="number">172.7</span>, <span class="number">61.1</span>], [<span class="number">167.6</span>, <span class="number">55.7</span>],
+            [<span class="number">151.1</span>, <span class="number">48.7</span>], [<span class="number">164.5</span>, <span class="number">52.3</span>], [<span class="number">163.5</span>, <span class="number">50.0</span>], [<span class="number">152.0</span>, <span class="number">59.3</span>], [<span class="number">169.0</span>, <span class="number">62.5</span>],
+            [<span class="number">164.0</span>, <span class="number">55.7</span>], [<span class="number">161.2</span>, <span class="number">54.8</span>], [<span class="number">155.0</span>, <span class="number">45.9</span>], [<span class="number">170.0</span>, <span class="number">70.6</span>], [<span class="number">176.2</span>, <span class="number">67.2</span>],
+            [<span class="number">170.0</span>, <span class="number">69.4</span>], [<span class="number">162.5</span>, <span class="number">58.2</span>], [<span class="number">170.3</span>, <span class="number">64.8</span>], [<span class="number">164.1</span>, <span class="number">71.6</span>], [<span class="number">169.5</span>, <span class="number">52.8</span>],
+            [<span class="number">163.2</span>, <span class="number">59.8</span>], [<span class="number">154.5</span>, <span class="number">49.0</span>], [<span class="number">159.8</span>, <span class="number">50.0</span>], [<span class="number">173.2</span>, <span class="number">69.2</span>], [<span class="number">170.0</span>, <span class="number">55.9</span>],
+            [<span class="number">161.4</span>, <span class="number">63.4</span>], [<span class="number">169.0</span>, <span class="number">58.2</span>], [<span class="number">166.2</span>, <span class="number">58.6</span>], [<span class="number">159.4</span>, <span class="number">45.7</span>], [<span class="number">162.5</span>, <span class="number">52.2</span>],
+            [<span class="number">159.0</span>, <span class="number">48.6</span>], [<span class="number">162.8</span>, <span class="number">57.8</span>], [<span class="number">159.0</span>, <span class="number">55.6</span>], [<span class="number">179.8</span>, <span class="number">66.8</span>], [<span class="number">162.9</span>, <span class="number">59.4</span>],
+            [<span class="number">161.0</span>, <span class="number">53.6</span>], [<span class="number">151.1</span>, <span class="number">73.2</span>], [<span class="number">168.2</span>, <span class="number">53.4</span>], [<span class="number">168.9</span>, <span class="number">69.0</span>], [<span class="number">173.2</span>, <span class="number">58.4</span>],
+            [<span class="number">171.8</span>, <span class="number">56.2</span>], [<span class="number">178.0</span>, <span class="number">70.6</span>], [<span class="number">164.3</span>, <span class="number">59.8</span>], [<span class="number">163.0</span>, <span class="number">72.0</span>], [<span class="number">168.5</span>, <span class="number">65.2</span>],
+            [<span class="number">166.8</span>, <span class="number">56.6</span>], [<span class="number">172.7</span>, <span class="number">105.2</span>], [<span class="number">163.5</span>, <span class="number">51.8</span>], [<span class="number">169.4</span>, <span class="number">63.4</span>], [<span class="number">167.8</span>, <span class="number">59.0</span>],
+            [<span class="number">159.5</span>, <span class="number">47.6</span>], [<span class="number">167.6</span>, <span class="number">63.0</span>], [<span class="number">161.2</span>, <span class="number">55.2</span>], [<span class="number">160.0</span>, <span class="number">45.0</span>], [<span class="number">163.2</span>, <span class="number">54.0</span>],
+            [<span class="number">162.2</span>, <span class="number">50.2</span>], [<span class="number">161.3</span>, <span class="number">60.2</span>], [<span class="number">149.5</span>, <span class="number">44.8</span>], [<span class="number">157.5</span>, <span class="number">58.8</span>], [<span class="number">163.2</span>, <span class="number">56.4</span>],
+            [<span class="number">172.7</span>, <span class="number">62.0</span>], [<span class="number">155.0</span>, <span class="number">49.2</span>], [<span class="number">156.5</span>, <span class="number">67.2</span>], [<span class="number">164.0</span>, <span class="number">53.8</span>], [<span class="number">160.9</span>, <span class="number">54.4</span>],
+            [<span class="number">162.8</span>, <span class="number">58.0</span>], [<span class="number">167.0</span>, <span class="number">59.8</span>], [<span class="number">160.0</span>, <span class="number">54.8</span>], [<span class="number">160.0</span>, <span class="number">43.2</span>], [<span class="number">168.9</span>, <span class="number">60.5</span>],
+            [<span class="number">158.2</span>, <span class="number">46.4</span>], [<span class="number">156.0</span>, <span class="number">64.4</span>], [<span class="number">160.0</span>, <span class="number">48.8</span>], [<span class="number">167.1</span>, <span class="number">62.2</span>], [<span class="number">158.0</span>, <span class="number">55.5</span>],
+            [<span class="number">167.6</span>, <span class="number">57.8</span>], [<span class="number">156.0</span>, <span class="number">54.6</span>], [<span class="number">162.1</span>, <span class="number">59.2</span>], [<span class="number">173.4</span>, <span class="number">52.7</span>], [<span class="number">159.8</span>, <span class="number">53.2</span>],
+            [<span class="number">170.5</span>, <span class="number">64.5</span>], [<span class="number">159.2</span>, <span class="number">51.8</span>], [<span class="number">157.5</span>, <span class="number">56.0</span>], [<span class="number">161.3</span>, <span class="number">63.6</span>], [<span class="number">162.6</span>, <span class="number">63.2</span>],
+            [<span class="number">160.0</span>, <span class="number">59.5</span>], [<span class="number">168.9</span>, <span class="number">56.8</span>], [<span class="number">165.1</span>, <span class="number">64.1</span>], [<span class="number">162.6</span>, <span class="number">50.0</span>], [<span class="number">165.1</span>, <span class="number">72.3</span>],
+            [<span class="number">166.4</span>, <span class="number">55.0</span>], [<span class="number">160.0</span>, <span class="number">55.9</span>], [<span class="number">152.4</span>, <span class="number">60.4</span>], [<span class="number">170.2</span>, <span class="number">69.1</span>], [<span class="number">162.6</span>, <span class="number">84.5</span>],
+            [<span class="number">170.2</span>, <span class="number">55.9</span>], [<span class="number">158.8</span>, <span class="number">55.5</span>], [<span class="number">172.7</span>, <span class="number">69.5</span>], [<span class="number">167.6</span>, <span class="number">76.4</span>], [<span class="number">162.6</span>, <span class="number">61.4</span>],
+            [<span class="number">167.6</span>, <span class="number">65.9</span>], [<span class="number">156.2</span>, <span class="number">58.6</span>], [<span class="number">175.2</span>, <span class="number">66.8</span>], [<span class="number">172.1</span>, <span class="number">56.6</span>], [<span class="number">162.6</span>, <span class="number">58.6</span>],
+            [<span class="number">160.0</span>, <span class="number">55.9</span>], [<span class="number">165.1</span>, <span class="number">59.1</span>], [<span class="number">182.9</span>, <span class="number">81.8</span>], [<span class="number">166.4</span>, <span class="number">70.7</span>], [<span class="number">165.1</span>, <span class="number">56.8</span>],
+            [<span class="number">177.8</span>, <span class="number">60.0</span>], [<span class="number">165.1</span>, <span class="number">58.2</span>], [<span class="number">175.3</span>, <span class="number">72.7</span>], [<span class="number">154.9</span>, <span class="number">54.1</span>], [<span class="number">158.8</span>, <span class="number">49.1</span>],
+            [<span class="number">172.7</span>, <span class="number">75.9</span>], [<span class="number">168.9</span>, <span class="number">55.0</span>], [<span class="number">161.3</span>, <span class="number">57.3</span>], [<span class="number">167.6</span>, <span class="number">55.0</span>], [<span class="number">165.1</span>, <span class="number">65.5</span>],
+            [<span class="number">175.3</span>, <span class="number">65.5</span>], [<span class="number">157.5</span>, <span class="number">48.6</span>], [<span class="number">163.8</span>, <span class="number">58.6</span>], [<span class="number">167.6</span>, <span class="number">63.6</span>], [<span class="number">165.1</span>, <span class="number">55.2</span>],
+            [<span class="number">165.1</span>, <span class="number">62.7</span>], [<span class="number">168.9</span>, <span class="number">56.6</span>], [<span class="number">162.6</span>, <span class="number">53.9</span>], [<span class="number">164.5</span>, <span class="number">63.2</span>], [<span class="number">176.5</span>, <span class="number">73.6</span>],
+            [<span class="number">168.9</span>, <span class="number">62.0</span>], [<span class="number">175.3</span>, <span class="number">63.6</span>], [<span class="number">159.4</span>, <span class="number">53.2</span>], [<span class="number">160.0</span>, <span class="number">53.4</span>], [<span class="number">170.2</span>, <span class="number">55.0</span>],
+            [<span class="number">162.6</span>, <span class="number">70.5</span>], [<span class="number">167.6</span>, <span class="number">54.5</span>], [<span class="number">162.6</span>, <span class="number">54.5</span>], [<span class="number">160.7</span>, <span class="number">55.9</span>], [<span class="number">160.0</span>, <span class="number">59.0</span>],
+            [<span class="number">157.5</span>, <span class="number">63.6</span>], [<span class="number">162.6</span>, <span class="number">54.5</span>], [<span class="number">152.4</span>, <span class="number">47.3</span>], [<span class="number">170.2</span>, <span class="number">67.7</span>], [<span class="number">165.1</span>, <span class="number">80.9</span>],
+            [<span class="number">172.7</span>, <span class="number">70.5</span>], [<span class="number">165.1</span>, <span class="number">60.9</span>], [<span class="number">170.2</span>, <span class="number">63.6</span>], [<span class="number">170.2</span>, <span class="number">54.5</span>], [<span class="number">170.2</span>, <span class="number">59.1</span>],
+            [<span class="number">161.3</span>, <span class="number">70.5</span>], [<span class="number">167.6</span>, <span class="number">52.7</span>], [<span class="number">167.6</span>, <span class="number">62.7</span>], [<span class="number">165.1</span>, <span class="number">86.3</span>], [<span class="number">162.6</span>, <span class="number">66.4</span>],
+            [<span class="number">152.4</span>, <span class="number">67.3</span>], [<span class="number">168.9</span>, <span class="number">63.0</span>], [<span class="number">170.2</span>, <span class="number">73.6</span>], [<span class="number">175.2</span>, <span class="number">62.3</span>], [<span class="number">175.2</span>, <span class="number">57.7</span>],
+            [<span class="number">160.0</span>, <span class="number">55.4</span>], [<span class="number">165.1</span>, <span class="number">104.1</span>], [<span class="number">174.0</span>, <span class="number">55.5</span>], [<span class="number">170.2</span>, <span class="number">77.3</span>], [<span class="number">160.0</span>, <span class="number">80.5</span>],
+            [<span class="number">167.6</span>, <span class="number">64.5</span>], [<span class="number">167.6</span>, <span class="number">72.3</span>], [<span class="number">167.6</span>, <span class="number">61.4</span>], [<span class="number">154.9</span>, <span class="number">58.2</span>], [<span class="number">162.6</span>, <span class="number">81.8</span>],
+            [<span class="number">175.3</span>, <span class="number">63.6</span>], [<span class="number">171.4</span>, <span class="number">53.4</span>], [<span class="number">157.5</span>, <span class="number">54.5</span>], [<span class="number">165.1</span>, <span class="number">53.6</span>], [<span class="number">160.0</span>, <span class="number">60.0</span>],
+            [<span class="number">174.0</span>, <span class="number">73.6</span>], [<span class="number">162.6</span>, <span class="number">61.4</span>], [<span class="number">174.0</span>, <span class="number">55.5</span>], [<span class="number">162.6</span>, <span class="number">63.6</span>], [<span class="number">161.3</span>, <span class="number">60.9</span>],
+            [<span class="number">156.2</span>, <span class="number">60.0</span>], [<span class="number">149.9</span>, <span class="number">46.8</span>], [<span class="number">169.5</span>, <span class="number">57.3</span>], [<span class="number">160.0</span>, <span class="number">64.1</span>], [<span class="number">175.3</span>, <span class="number">63.6</span>],
+            [<span class="number">169.5</span>, <span class="number">67.3</span>], [<span class="number">160.0</span>, <span class="number">75.5</span>], [<span class="number">172.7</span>, <span class="number">68.2</span>], [<span class="number">162.6</span>, <span class="number">61.4</span>], [<span class="number">157.5</span>, <span class="number">76.8</span>],
+            [<span class="number">176.5</span>, <span class="number">71.8</span>], [<span class="number">164.4</span>, <span class="number">55.5</span>], [<span class="number">160.7</span>, <span class="number">48.6</span>], [<span class="number">174.0</span>, <span class="number">66.4</span>], [<span class="number">163.8</span>, <span class="number">67.3</span>]
+        ];
+// 创建<span class="atom">x</span>轴的比例尺
+<span class="atom">var</span> <span class="atom">xScale</span> = <span class="atom">d3</span>.<span class="atom">scale</span>.<span class="atom">linear</span>()
+        .<span class="atom">domain</span>([<span class="number">140</span>,  <span class="number">190</span>])
+        .<span class="atom">range</span>([<span class="number">0</span>, <span class="atom">width</span> - <span class="atom">padding</span>.<span class="atom">left</span> - <span class="atom">padding</span>.<span class="atom">right</span>]);
+// 创建<span class="atom">y</span>轴的比例尺
+<span class="atom">var</span> <span class="atom">yScale</span> = <span class="atom">d3</span>.<span class="atom">scale</span>.<span class="atom">linear</span>()
+        .<span class="atom">domain</span>([<span class="number">40</span>, <span class="number">120</span>])
+        .<span class="atom">range</span>([<span class="atom">height</span> - <span class="atom">padding</span>.<span class="atom">top</span> - <span class="atom">padding</span>.<span class="atom">bottom</span>, <span class="number">0</span>]);
+// 创建<span class="atom">x</span>轴
+<span class="atom">var</span> <span class="atom">xAxis</span> = <span class="atom">d3</span>.<span class="atom">svg</span>.<span class="atom">axis</span>()
+        .<span class="atom">scale</span>(<span class="atom">xScale</span>)
+        .<span class="atom">orient</span>(<span class="string">'bottom'</span>);
+// 创建<span class="atom">y</span>轴
+<span class="atom">var</span> <span class="atom">yAxis</span> = <span class="atom">d3</span>.<span class="atom">svg</span>.<span class="atom">axis</span>()
+        .<span class="atom">scale</span>(<span class="atom">yScale</span>)
+        .<span class="atom">orient</span>(<span class="string">'left'</span>);
+// 把<span class="atom">x</span>轴应用到对应的<span class="name">SVG</span>元素上
+<span class="atom">main</span>.<span class="atom">append</span>(<span class="string">'g'</span>)
+        .<span class="atom">attr</span>(<span class="string">'class'</span>, <span class="string">'axis'</span>)
+        .<span class="atom">attr</span>(<span class="string">'transform'</span>, <span class="string">'translate(0,'</span> + (<span class="atom">height</span> - <span class="atom">padding</span>.<span class="atom">top</span> - <span class="atom">padding</span>.<span class="atom">bottom</span>) + <span class="string">')'</span>)
+        .<span class="atom">call</span>(<span class="atom">xAxis</span>);
+// 把<span class="atom">y</span>轴应用到对应的<span class="name">SVG</span>元素上
+<span class="atom">main</span>.<span class="atom">append</span>(<span class="string">'g'</span>)
+        .<span class="atom">attr</span>(<span class="string">'class'</span>, <span class="string">'axis'</span>)
+        .<span class="atom">call</span>(<span class="atom">yAxis</span>);
+</code></pre><p>&emsp;&emsp;同折线图的坐标轴的实现是相同的，先用<a href="https://github.com/mbostock/d3/wiki/Quantitative-Scales#linear" target="_blank" rel="external">d3.scale.linear()</a>创建比例尺，再用<a href="https://github.com/mbostock/d3/wiki/SVG-Axes#axis" target="_blank" rel="external">d3.svg.axis()</a>创建坐标轴并且设置对应的比例尺，最后添加SVG元素并“绑定”坐标轴到其上，就可以看到完成以后的坐标轴。注意这里需要对移动SVG元素，使它们在视觉上组装成一个坐标系（但实际上它们在位置上是零散的，并没有很强的关系）。<br><img src="/uploads/d3-basicCharts-scatter&bubble/axis-scatter.png" width="320" height="160"></p>
+<h3 id="散点的实现">散点的实现</h3><p>&emsp;&emsp;在图表中一般点都是通过画圆来实现的，当圆的半径足够小的时候，它就是点。</p>
+<pre><code><span class="comment">// 添加散点</span>
+main.selectAll(<span class="string">'.point'</span>)
+        .data(dataset)
+        .enter()
+        .append(<span class="string">'circle'</span>)
+        .attr(<span class="string">'class'</span>, <span class="string">'point'</span>)
+        .attr(<span class="string">'cx'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> </span>{
+            <span class="keyword">return</span> xScale(d[<span class="number">0</span>]);
+        })
+        .attr(<span class="string">'cy'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> </span>{
+            <span class="keyword">return</span> yScale(d[<span class="number">1</span>]);
+        })
+        .attr(<span class="string">'r'</span>, <span class="number">5</span>);
+</code></pre><p>&emsp;&emsp;与折线图添加点的方式是一样的。在main元素中选择到所有的圆先“占位”（因为此时选择到的是一个空的集合，只是这个集合代表main中所有的圆），然后绑定dataset到此集合上，通过<a href="https://github.com/mbostock/d3/wiki/Selections#enter" target="_blank" rel="external">enter()</a>和append()搭配使用添加新的circle元素直到集合元素个数与dataset子元素个数相同为止。用比例尺计算出各圆的坐标并对其相关属性进行赋值，就完成了点的添加。因为散点图的点有点多，为了图表更加美观，给圆设置一下样式。  </p>
+<pre><code><span class="class">.point</span> <span class="rules">{
+    <span class="rule"><span class="attribute">fill</span>:<span class="value"> <span class="hexcolor">#2ec7c9</span></span></span>;
+    <span class="rule"><span class="attribute">fill-opacity</span>:<span class="value"> <span class="number">0.5</span></span></span>;
+}</span>
+</code></pre><p>&emsp;&emsp;最后，散点图长这样。<br><img src="/uploads/d3-basicCharts-scatter&bubble/scatter.png" width="320" height="160"></p>
+<h2 id="气泡图">气泡图</h2><h3 id="坐标轴的实现-1">坐标轴的实现</h3><p>&emsp;&emsp;因为只有模拟的数据结构不同，实现原理都是类似的，这里就不再赘述，直接上代码。  </p>
+<pre><code><span class="comment">// 模拟数据</span>
+var dataset = [
+    { <span class="string">x:</span> <span class="number">69</span>, <span class="string">y:</span> <span class="number">45</span>, <span class="string">weight:</span> <span class="number">5</span> },{ <span class="string">x:</span> <span class="number">30</span>, <span class="string">y:</span> <span class="number">37</span>, <span class="string">weight:</span> <span class="number">10</span> },
+    { <span class="string">x:</span> <span class="number">43</span>, <span class="string">y:</span> <span class="number">10</span>, <span class="string">weight:</span> <span class="number">23</span> },{ <span class="string">x:</span> <span class="number">54</span>, <span class="string">y:</span> <span class="number">48</span>, <span class="string">weight:</span> <span class="number">41</span> },
+    { <span class="string">x:</span> <span class="number">18</span>, <span class="string">y:</span> <span class="number">18</span>, <span class="string">weight:</span> <span class="number">41</span> },{ <span class="string">x:</span> <span class="number">88</span>, <span class="string">y:</span> <span class="number">21</span>, <span class="string">weight:</span> <span class="number">32</span> },
+    { <span class="string">x:</span> <span class="number">45</span>, <span class="string">y:</span> <span class="number">48</span>, <span class="string">weight:</span> <span class="number">12</span> },{ <span class="string">x:</span> <span class="number">14</span>, <span class="string">y:</span> <span class="number">32</span>, <span class="string">weight:</span> <span class="number">9</span> },
+    { <span class="string">x:</span> <span class="number">78</span>, <span class="string">y:</span> <span class="number">18</span>, <span class="string">weight:</span> <span class="number">16</span> },{ <span class="string">x:</span> <span class="number">13</span>, <span class="string">y:</span> <span class="number">45</span>, <span class="string">weight:</span> <span class="number">32</span> }
+];
+<span class="comment">// 添加x轴和y轴</span>
+var xScale = d3.scale.linear()
+        .domain([<span class="number">0</span>, <span class="number">100</span>])
+        .range([<span class="number">0</span>, width - padding.left - padding.right]);
+var yScale = d3.scale.linear()
+        .domain([<span class="number">0</span>, <span class="number">50</span>])
+        .range([height - padding.top - padding.bottom, <span class="number">0</span>]);
+var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient(<span class="string">'bottom'</span>);
+var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .orient(<span class="string">'left'</span>);  
+</code></pre><h3 id="气泡的实现">气泡的实现</h3><pre><code><span class="comment">// 添加气泡</span>
+main.selectAll(<span class="string">'.bubble'</span>)
+        .data(dataset)
+        .enter()
+        .append(<span class="string">'circle'</span>)
+        .attr(<span class="string">'class'</span>, <span class="string">'bubble'</span>)
+        .attr(<span class="string">'cx'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> </span>{
+            <span class="keyword">return</span> xScale(d.x);
+        })
+        .attr(<span class="string">'cy'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> </span>{
+            <span class="keyword">return</span> yScale(d.y);
+        })
+        .attr(<span class="string">'r'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> </span>{
+            <span class="keyword">return</span> d.weight;
+        });
+</code></pre><p>&emsp;&emsp;最后的气泡图是长这样的。<br><img src="/uploads/d3-basicCharts-scatter&bubble/bubble.png" width="320" height="160"><br>&emsp;&emsp;完整的代码和例子展示请移步<a href="/uploads/d3-basicCharts-scatter%26bubble/scatter.html">scatter.html</a>和<a href="/uploads/d3-basicCharts-scatter%26bubble/bubble.html">bubble.html</a>。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/D3-js/" rel="tag">#D3.js</a>
+          
+            <a href="/tags/svg/" rel="tag">#svg</a>
+          
+            <a href="/tags/数据可视化/" rel="tag">#数据可视化</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/23/d3-basicCharts-line/" rel="next" title="基于D3.js的折线图的实现">
+                <i class="fa fa-chevron-left"></i> 基于D3.js的折线图的实现
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/24/d3-basicCharts-pie/" rel="prev" title="基于D3.js的饼图的实现">
+                基于D3.js的饼图的实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/touxiang.jpg" alt="陈五百" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">陈五百</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">我不怕千万人阻挡，只怕自己投降。</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#散点图"><span class="nav-number">1.</span> <span class="nav-text">散点图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#坐标轴的实现"><span class="nav-number">1.1.</span> <span class="nav-text">坐标轴的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#散点的实现"><span class="nav-number">1.2.</span> <span class="nav-text">散点的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#气泡图"><span class="nav-number">2.</span> <span class="nav-text">气泡图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#坐标轴的实现-1"><span class="nav-number">2.1.</span> <span class="nav-text">坐标轴的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#气泡的实现"><span class="nav-number">2.2.</span> <span class="nav-text">气泡的实现</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈五百</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
