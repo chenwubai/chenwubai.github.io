@@ -37,7 +37,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="数据可视化,svg,D3.js," />
+  <meta name="keywords" content="实践," />
 
 
 
@@ -53,20 +53,16 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;在前面的几篇文章里，我已经介绍过怎样用柱状图、折线图、散点图和气泡图这四种基本图表。这四种图表都是有坐标轴的，现在来说一种没有坐标轴的图表——饼图。">
+<meta name="description" content="之前在项目中遇到了requireJS加载模块的问题，于是下来就试了一下感兴趣的点，特此记录一下。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="基于D3.js的饼图的实现">
-<meta property="og:url" content="http://yoursite.com/2015/11/24/d3-basicCharts-pie/index.html">
+<meta property="og:title" content="RequireJS模块加载实践">
+<meta property="og:url" content="http://yoursite.com/2016/08/04/RequireJS模块加载实践/index.html">
 <meta property="og:site_name" content="陈五百">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;在前面的几篇文章里，我已经介绍过怎样用柱状图、折线图、散点图和气泡图这四种基本图表。这四种图表都是有坐标轴的，现在来说一种没有坐标轴的图表——饼图。">
-<meta property="og:image" content="http://yoursite.com/uploads/d3-basicCharts-pie/dataCompare.png">
-<meta property="og:image" content="http://yoursite.com/uploads/d3-basicCharts-pie/pie.png">
-<meta property="og:image" content="http://yoursite.com/uploads/d3-basicCharts-pie/pieWithText.png">
-<meta property="og:updated_time" content="2016-04-21T13:12:07.000Z">
+<meta property="og:description" content="之前在项目中遇到了requireJS加载模块的问题，于是下来就试了一下感兴趣的点，特此记录一下。">
+<meta property="og:updated_time" content="2016-08-04T01:31:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="基于D3.js的饼图的实现">
-<meta name="twitter:description" content="&amp;emsp;&amp;emsp;在前面的几篇文章里，我已经介绍过怎样用柱状图、折线图、散点图和气泡图这四种基本图表。这四种图表都是有坐标轴的，现在来说一种没有坐标轴的图表——饼图。">
-<meta name="twitter:image" content="http://yoursite.com/uploads/d3-basicCharts-pie/dataCompare.png">
+<meta name="twitter:title" content="RequireJS模块加载实践">
+<meta name="twitter:description" content="之前在项目中遇到了requireJS加载模块的问题，于是下来就试了一下感兴趣的点，特此记录一下。">
 
 
 
@@ -78,7 +74,7 @@
   };
 </script>
 
-  <title> 基于D3.js的饼图的实现 | 陈五百 </title>
+  <title> RequireJS模块加载实践 | 陈五百 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -198,7 +194,7 @@
             
             
               
-                基于D3.js的饼图的实现
+                RequireJS模块加载实践
               
             
           </h1>
@@ -207,8 +203,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-11-24T14:00:00+08:00" content="2015-11-24">
-              2015-11-24
+            <time itemprop="dateCreated" datetime="2016-08-04T00:02:00+08:00" content="2016-08-04">
+              2016-08-04
             </time>
           </span>
 
@@ -246,78 +242,24 @@
       
 
       
-        <span itemprop="articleBody"><p>&emsp;&emsp;在前面的几篇文章里，我已经介绍过怎样用柱状图、折线图、散点图和气泡图这四种基本图表。这四种图表都是有坐标轴的，现在来说一种没有坐标轴的图表——饼图。<br><a id="more"></a><br>&emsp;&emsp;还是和之前一样，我们先把简单的画图框架搭起来，添加SVG画布。但是这里需要注意的是，为了方便后面画饼图上的弧形，我们把组合这些元素的g元素移动到画布的中心：  </p>
-<pre><code><span class="doctype">&lt;!DOCTYPE html&gt;</span>
-<span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">head</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">title</span>&gt;</span>饼图<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">style</span>&gt;</span><span class="css">
-            <span class="class">.container</span> <span class="rules">{
-                <span class="rule"><span class="attribute">margin</span>:<span class="value"> <span class="number">30px</span> auto</span></span>;
-                <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">600px</span></span></span>;
-                <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">300px</span></span></span>;
-                <span class="rule"><span class="attribute">border</span>:<span class="value"> <span class="number">1px</span> solid <span class="hexcolor">#000</span></span></span>;
-            }</span>
-        </span><span class="tag">&lt;/<span class="title">style</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">head</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">body</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"container"</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">svg</span> <span class="attribute">width</span>=<span class="value">"100%"</span> <span class="attribute">height</span>=<span class="value">"100%"</span>&gt;</span><span class="tag">&lt;/<span class="title">svg</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"http://d3js.org/d3.v3.min.js"</span> <span class="attribute">charset</span>=<span class="value">"utf-8"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript">
-            <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>{
-                <span class="keyword">var</span> width = <span class="number">600</span>, height = <span class="number">300</span>;
-                <span class="comment">// 创建一个分组用来组合要画的图表元素</span>
-                <span class="keyword">var</span> main = d3.select(<span class="string">'.container svg'</span>).append(<span class="string">'g'</span>)
-                        .classed(<span class="string">'main'</span>, <span class="literal">true</span>)
-                        <span class="comment">// 注意这里和前面几种图表的差别</span>
-                        .attr(<span class="string">'transform'</span>, <span class="string">"translate("</span> + width/<span class="number">2</span> + <span class="string">','</span> + height/<span class="number">2</span> + <span class="string">')'</span>);
-
-            };
-        </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">body</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">html</span>&gt;</span>   
-</code></pre><h2 id="模拟数据并转化">模拟数据并转化</h2><p>&emsp;&emsp;为了画饼图，我们模拟了一些这样的数据。  </p>
-<pre><code><span class="comment">// 模拟数据</span>
-var dataset = [
-    {<span class="string">name:</span> <span class="string">'购物'</span>, <span class="string">value:</span> <span class="number">983</span>},
-    {<span class="string">name:</span> <span class="string">'日常饮食'</span>, <span class="string">value:</span> <span class="number">300</span>},
-    {<span class="string">name:</span> <span class="string">'医药'</span>, <span class="string">value:</span> <span class="number">1400</span>},
-    {<span class="string">name:</span> <span class="string">'交通'</span>, <span class="string">value:</span> <span class="number">402</span>},
-    {<span class="string">name:</span> <span class="string">'杂费'</span>, <span class="string">value:</span> <span class="number">134</span>}
-];
-</code></pre><p>&emsp;&emsp;在柱状图等有坐标轴的图表中，我们通过创建合适的比例尺来将模拟好的数据转化成适合画图的数据，那在饼图里，又用什么来转化呢？看这里~  </p>
-<pre><code><span class="comment">// 转换原始数据为能用于绘图的数据</span>
-<span class="keyword">var</span> pie = d3.layout.pie()
-                .sort(<span class="literal">null</span>)
-                .value(<span class="function"><span class="keyword">function</span><span class="params">(d)</span> </span>{
-                    <span class="keyword">return</span> d.value;
-                });
-<span class="comment">// pie是一个函数    </span>
-<span class="keyword">var</span> pieData = pie(dataset);
-</code></pre><p>&emsp;&emsp;<a href="https://github.com/mbostock/d3/wiki/Layouts" target="_blank" rel="external">layout</a>叫做布局，在D3.js中它提供了一些转化成特定图表数据的函数，如其中就包括饼图。它提供一个基础的转化函数，在此基础上我们根据自己的需要再对该函数进行进一步的设置，就得到了如上述代码中pie变量保存的函数一样的转化工具，通过把原始的数据dataset传入pie中就能得到绘图数据pieData。具体的变化我们可以看下图。<br><img src="/uploads/d3-basicCharts-pie/dataCompare.png" width="507" height="190"><br>&emsp;&emsp;左边是转化前的原始的数据结构，右边是转化后的适合绘图的数据结构。可以看到，在保留原本的数据的基础上，转化后的数据新增了该项在整个饼图中的起始角度（startAngle和endAngle），以及弧形之间的间隙角度（padAngle）。  </p>
-<h2 id="计算弧形路径">计算弧形路径</h2><p>&emsp;&emsp;在饼图中，我们用SVG中的path元素来表示每一块弧形，而从pieData到path元素的d属性还是有一定的距离，所以我还需要再通过一步操作来用pieData计算出d属性可用的值。  </p>
-<pre><code><span class="comment">// 创建计算弧形路径的函数</span>
-<span class="variable"><span class="keyword">var</span> radius</span> = <span class="number">100</span>;
-<span class="variable"><span class="keyword">var</span> arc</span> = d3.svg.arc()
-        .innerRadius(<span class="number">0</span>)
-        .outerRadius(radius);  
-</code></pre><h2 id="添加弧形">添加弧形</h2><p>&emsp;&emsp;上面的代码用<a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#arc" target="_blank" rel="external">svg.arc()</a>创建了一个计算弧形路径的函数，通过这个函数就可以计算出path的d属性的值，就像下面这样。  </p>
-<pre><code><span class="comment">// 添加弧形</span>
-main.selectAll(<span class="string">'g'</span>)
-        .data(pieData)
-        .enter()
-        .append(<span class="string">'path'</span>)
-        .attr(<span class="string">'fill'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d, i)</span> </span>{
-            <span class="keyword">return</span> getColor(i);
-        })
-        .attr(<span class="string">'d'</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span></span>{
-            <span class="keyword">return</span> arc(d);
-        });
-</code></pre><p>好了，饼图就这样画好了。<br><img src="/uploads/d3-basicCharts-pie/pie.png" width="320" height="160">  </p>
-<p>&emsp;&emsp;给大家（虽然我知道目前没有什么人看这个但是我还是要像个神经病一样的装作有人看 =_= ）留个小小的拓展，如何加上下图这样的文字标签。答案就在<a href="/uploads/d3-basicCharts-pie/pie.html">pie.html</a>里。<br><img src="/uploads/d3-basicCharts-pie/pieWithText.png" width="320" height="160"></p>
+        <span itemprop="articleBody"><p>之前在项目中遇到了requireJS加载模块的问题，于是下来就试了一下感兴趣的点，特此记录一下。<br><a id="more"></a>   </p>
+<h3 id="问题1">问题1</h3><p>如果一个js文件里面define了两个匿名模块，那require时得到的是哪一个模块？  </p>
+<pre><code><span class="comment"><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// amd.js</span></div><div class="line"><span class="selector-tag">define</span>(function() &#123;</div><div class="line">	<span class="selector-tag">return</span> &#123;</div><div class="line">		<span class="attribute">a</span>: <span class="number">1</span>,</div><div class="line">		<span class="attribute">b</span>: <span class="number">2</span></div><div class="line">	&#125;;</div><div class="line">&#125;);</div><div class="line"><span class="selector-tag">define</span>(function() &#123;</div><div class="line">    <span class="selector-tag">return</span> &#123;</div><div class="line">        <span class="attribute">a</span>: <span class="number">111</span>,</div><div class="line">        <span class="attribute">b</span>: <span class="number">222</span></div><div class="line">    &#125;;</div><div class="line">&#125;);  </div><div class="line"></div><div class="line"><span class="comment">// main.js</span></div><div class="line"><span class="selector-tag">require</span>([<span class="string">'./amd'</span>], function(amd) &#123;</div><div class="line">    console<span class="selector-class">.log</span>(amd);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></span>
+</code></pre><p>最后得到的输出是{a: 1, b:2}，可见得到是最先定义的那个匿名模块，后面的匿名模块会被忽略。  </p>
+<h3 id="问题2">问题2</h3><p>如果一个js文件里define了两个具名模块，那require时得到的是什么？  </p>
+<pre><code><span class="comment"><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// amd.js</span></div><div class="line"><span class="selector-tag">define</span>(<span class="string">'aaa'</span>, [], function() &#123;</div><div class="line">    <span class="selector-tag">return</span> &#123;</div><div class="line">        <span class="attribute">a</span>: <span class="number">1</span>,</div><div class="line">        <span class="attribute">b</span>: <span class="number">2</span></div><div class="line">    &#125;;</div><div class="line">&#125;);</div><div class="line"><span class="selector-tag">define</span>(<span class="string">'bbb'</span>, [], function() &#123;</div><div class="line">    <span class="selector-tag">return</span> &#123;</div><div class="line">        <span class="attribute">a</span>: <span class="number">111</span>,</div><div class="line">        <span class="attribute">b</span>: <span class="number">222</span></div><div class="line">    &#125;;</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// main.js</span></div><div class="line"><span class="selector-tag">require</span>([<span class="string">'./amd'</span>], function(amd) &#123;</div><div class="line">    console<span class="selector-class">.log</span>(amd);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></span>
+</code></pre><p>得到的结果是undefined。  </p>
+<h3 id="问题3">问题3</h3><p>如果一个js文件里define了两个具名模块，如何才能require到想require的那个模块？  </p>
+<pre><code><span class="comment"><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// amd.js</span></div><div class="line"><span class="selector-tag">define</span>(<span class="string">'aaa'</span>, [], function() &#123;</div><div class="line">    <span class="selector-tag">return</span> &#123;</div><div class="line">        <span class="attribute">a</span>: <span class="number">1</span>,</div><div class="line">        <span class="attribute">b</span>: <span class="number">2</span></div><div class="line">    &#125;;</div><div class="line">&#125;);</div><div class="line"><span class="selector-tag">define</span>(<span class="string">'bbb'</span>, [], function() &#123;</div><div class="line">    <span class="selector-tag">return</span> &#123;</div><div class="line">        <span class="attribute">a</span>: <span class="number">111</span>,</div><div class="line">        <span class="attribute">b</span>: <span class="number">222</span></div><div class="line">    &#125;;</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// main.js</span></div><div class="line"><span class="selector-tag">require</span><span class="selector-class">.config</span>(&#123;</div><div class="line">    <span class="attribute">baseUrl</span>: <span class="string">'./'</span>,</div><div class="line">    <span class="attribute">paths</span>: &#123;</div><div class="line">       <span class="attribute">aaa</span>: <span class="string">'amd'</span></div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"><span class="selector-tag">require</span>([<span class="string">'aaa'</span>], function(module) &#123;</div><div class="line">    console<span class="selector-class">.log</span>(module);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></span>
+</code></pre><p>经过试验，以上方法是可以拿到amd.js里的aaa模块的，必须要在require.config中的paths对象里，将amd.js对应的属性名称声明为想要require的具名模块的名称（在这里是’aaa’），才会成功。  </p>
+<h3 id="问题4">问题4</h3><p>在问题3中，如果声明的属性名称不是amd.js中具名模块的名称，那会require出什么呢？</p>
+<pre><code><span class="comment"><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// amd.js</span></div><div class="line"><span class="selector-tag">define</span>(<span class="string">'aaa'</span>, [], function() &#123;</div><div class="line">    <span class="selector-tag">return</span> &#123;</div><div class="line">        <span class="attribute">a</span>: <span class="number">1</span>,</div><div class="line">        <span class="attribute">b</span>: <span class="number">2</span></div><div class="line">    &#125;;</div><div class="line">&#125;);</div><div class="line"><span class="selector-tag">define</span>(function() &#123;</div><div class="line">    <span class="selector-tag">return</span> &#123;</div><div class="line">        <span class="attribute">a</span>: <span class="number">111</span>,</div><div class="line">        <span class="attribute">b</span>: <span class="number">222</span></div><div class="line">    &#125;;</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// main.js</span></div><div class="line"><span class="selector-tag">require</span><span class="selector-class">.config</span>(&#123;</div><div class="line">    <span class="attribute">baseUrl</span>: <span class="string">'./'</span>,</div><div class="line">    <span class="attribute">paths</span>: &#123;</div><div class="line">       <span class="attribute">abc</span>: <span class="string">'amd'</span></div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"><span class="selector-tag">require</span>([<span class="string">'abc'</span>], function(module) &#123;</div><div class="line">    console<span class="selector-class">.log</span>(module);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></span>
+</code></pre><p>这里的输出是{a: 111, b: 222}，可见如果在paths对象中amd.js对应的属性名称和amd.js中的具名模块的名称不相同时，默认会去require amd.js中的匿名模块。  </p>
+<h3 id="参考链接">参考链接</h3><ul>
+<li><a href="http://www.jianshu.com/p/bd4585b737d7" target="_blank" rel="external">AMD, CMD, CommonJS和UMD</a>  </li>
+<li><a href="http://javascript.ruanyifeng.com/tool/requirejs.html" target="_blank" rel="external">RequireJS和AMD规范</a>  </li>
+<li><a href="http://www.2cto.com/kf/201410/344627.html" target="_blank" rel="external">requireJS的匿名模块和命名模块的差别和最佳实践</a></li>
+</ul>
 </span>
       
     </div>
@@ -326,11 +268,7 @@ main.selectAll(<span class="string">'g'</span>)
       
         <div class="post-tags">
           
-            <a href="/tags/数据可视化/" rel="tag">#数据可视化</a>
-          
-            <a href="/tags/svg/" rel="tag">#svg</a>
-          
-            <a href="/tags/D3-js/" rel="tag">#D3.js</a>
+            <a href="/tags/实践/" rel="tag">#实践</a>
           
         </div>
       
@@ -339,17 +277,13 @@ main.selectAll(<span class="string">'g'</span>)
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/24/d3-basicCharts-scatter&bubble/" rel="next" title="基于D3.js的散点图和气泡图的实现">
-                <i class="fa fa-chevron-left"></i> 基于D3.js的散点图和气泡图的实现
+              <a href="/2016/08/01/前端早读课/" rel="next" title="前端早读课">
+                <i class="fa fa-chevron-left"></i> 前端早读课
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/11/24/d3-basicCharts-radar/" rel="prev" title="基于D3.js的雷达图的实现">
-                基于D3.js的雷达图的实现 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -463,7 +397,7 @@ main.selectAll(<span class="string">'g'</span>)
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#模拟数据并转化"><span class="nav-number">1.</span> <span class="nav-text">模拟数据并转化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算弧形路径"><span class="nav-number">2.</span> <span class="nav-text">计算弧形路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加弧形"><span class="nav-number">3.</span> <span class="nav-text">添加弧形</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题1"><span class="nav-number">1.</span> <span class="nav-text">问题1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题2"><span class="nav-number">2.</span> <span class="nav-text">问题2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题3"><span class="nav-number">3.</span> <span class="nav-text">问题3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题4"><span class="nav-number">4.</span> <span class="nav-text">问题4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考链接"><span class="nav-number">5.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
